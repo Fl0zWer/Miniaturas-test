@@ -1,0 +1,2 @@
+# Miniaturas-test
+asd 
