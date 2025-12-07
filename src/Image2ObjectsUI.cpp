@@ -130,7 +130,9 @@ void Image2ObjectsUI::onLoadFile(CCObject* sender) {
     currentImage = ImageProcessor::loadFromFile("test.png");
     
     if (currentImage.isValid()) {
-        updateStatus(fmt::format("Loaded image: {}x{}", currentImage.width, currentImage.height));
+        std::string status = "Loaded image: " + std::to_string(currentImage.width) + 
+                            "x" + std::to_string(currentImage.height);
+        updateStatus(status);
         updatePreview();
     } else {
         updateStatus("Failed to load image");
@@ -194,7 +196,8 @@ void Image2ObjectsUI::processImageAsync() {
         if (!shouldCancel) {
             // Update UI on main thread
             Loader::get()->queueInMainThread([this]() {
-                updateStatus(fmt::format("Generated {} objects", generatedObjects.size()));
+                std::string status = "Generated " + std::to_string(generatedObjects.size()) + " objects";
+                updateStatus(status);
                 isProcessing = false;
             });
         }
@@ -220,7 +223,8 @@ void Image2ObjectsUI::onInsertToEditor(CCObject* sender) {
     bool success = EditorInserter::insertObjects(generatedObjects);
     
     if (success) {
-        updateStatus(fmt::format("Inserted {} objects", generatedObjects.size()));
+        std::string status = "Inserted " + std::to_string(generatedObjects.size()) + " objects";
+        updateStatus(status);
     } else {
         updateStatus("Failed to insert objects");
     }
@@ -244,7 +248,8 @@ void Image2ObjectsUI::onModeChanged(CCObject* sender) {
     
     auto modeLabel = dynamic_cast<CCLabelBMFont*>(this->getChildByTag(100));
     if (modeLabel) {
-        modeLabel->setString(fmt::format("Mode: {}", modeNames[modeInt]).c_str());
+        std::string modeText = "Mode: " + std::string(modeNames[modeInt]);
+        modeLabel->setString(modeText.c_str());
     }
 }
 
@@ -263,7 +268,9 @@ void Image2ObjectsUI::updateStatus(const std::string& text) {
 void Image2ObjectsUI::loadImageFile(const std::string& path) {
     currentImage = ImageProcessor::loadFromFile(path);
     if (currentImage.isValid()) {
-        updateStatus(fmt::format("Loaded: {}x{}", currentImage.width, currentImage.height));
+        std::string status = "Loaded: " + std::to_string(currentImage.width) + 
+                            "x" + std::to_string(currentImage.height);
+        updateStatus(status);
         updatePreview();
     }
 }

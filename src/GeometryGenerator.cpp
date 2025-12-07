@@ -72,7 +72,7 @@ std::vector<GDObject> GeometryGenerator::generatePixelArt(
     const Image& img, const ColorPalette& palette, float scale) {
     
     std::vector<GDObject> objects;
-    const float blockSize = 30.0f * scale; // GD units
+    const float blockSize = BLOCK_SIZE_FACTOR * scale; // GD units
     
     for (int y = 0; y < img.height; y++) {
         for (int x = 0; x < img.width; x++) {
@@ -95,14 +95,14 @@ std::vector<GDObject> GeometryGenerator::generateOutline(
     
     Image edges = ImageProcessor::detectEdges(img);
     std::vector<GDObject> objects;
-    const float blockSize = 30.0f * scale;
+    const float blockSize = BLOCK_SIZE_FACTOR * scale;
     
     for (int y = 0; y < edges.height; y++) {
         for (int x = 0; x < edges.width; x++) {
             Pixel pixel = edges.getPixel(x, y);
             
             // Only place objects where edges are detected (high intensity)
-            if (pixel.r > 100) {
+            if (pixel.r > EDGE_INTENSITY_THRESHOLD) {
                 GDColor color = palette.findClosestColor(img.getPixel(x, y));
                 GDObject obj = createDeco(getLineObjectID(), x * blockSize, y * blockSize, color, scale);
                 objects.push_back(obj);
@@ -122,7 +122,7 @@ std::vector<GDObject> GeometryGenerator::generateLowObject(
     Image reduced = ImageProcessor::resize(img, targetWidth, targetHeight);
     
     std::vector<GDObject> objects;
-    const float blockSize = 30.0f * scale * 4.0f; // Larger blocks
+    const float blockSize = BLOCK_SIZE_FACTOR * scale * 4.0f; // Larger blocks
     
     for (int y = 0; y < reduced.height; y++) {
         for (int x = 0; x < reduced.width; x++) {
@@ -145,7 +145,7 @@ std::vector<GDObject> GeometryGenerator::generateGeometrize(
     // Simplified geometrize - use rectangles to approximate image
     std::vector<GDObject> objects;
     const int numShapes = 100; // Number of shapes to use
-    const float blockSize = 30.0f * scale;
+    const float blockSize = BLOCK_SIZE_FACTOR * scale;
     
     // Get dominant colors
     auto dominantColors = ImageProcessor::getDominantColors(img, 5);
@@ -159,7 +159,7 @@ std::vector<GDObject> GeometryGenerator::generateGeometrize(
             for (int x = 0; x < img.width; x += 4) {
                 Pixel pixel = img.getPixel(x, y);
                 
-                if (ImageProcessor::colorDistance(pixel, color) < 50.0) {
+                if (ImageProcessor::colorDistance(pixel, color) < COLOR_MATCH_THRESHOLD) {
                     GDObject obj = createBlock(x * blockSize, y * blockSize, gdColor, scale * 2.0f);
                     objects.push_back(obj);
                 }
@@ -190,7 +190,7 @@ std::vector<GDObject> GeometryGenerator::generateMosaic(
     const Image& img, const ColorPalette& palette, float scale) {
     
     std::vector<GDObject> objects;
-    const float blockSize = 30.0f * scale;
+    const float blockSize = BLOCK_SIZE_FACTOR * scale;
     
     // Use different decorative objects as "pixels"
     const std::vector<int> decoIDs = {211, 467, 468, 469, 470}; // Various deco objects
@@ -213,7 +213,7 @@ std::vector<GDObject> GeometryGenerator::generateMosaic(
 
 std::vector<GDObject> GeometryGenerator::generateSilhouette(const Image& img, float scale) {
     std::vector<GDObject> objects;
-    const float blockSize = 30.0f * scale;
+    const float blockSize = BLOCK_SIZE_FACTOR * scale;
     
     // Convert to grayscale and threshold
     Image gray = ImageProcessor::toGrayscale(img);

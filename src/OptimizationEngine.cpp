@@ -176,7 +176,7 @@ std::vector<GDObject> OptimizationEngine::reduceToCount(const std::vector<GDObje
     std::vector<GDObject> result;
     result.reserve(targetCount);
     
-    for (int i = 0; i < targetCount && i < scored.size(); i++) {
+    for (size_t i = 0; i < static_cast<size_t>(targetCount) && i < scored.size(); i++) {
         result.push_back(scored[i].second);
     }
     

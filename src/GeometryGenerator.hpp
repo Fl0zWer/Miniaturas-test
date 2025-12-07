@@ -8,6 +8,11 @@
 
 namespace image2objects {
 
+// Constants for generation algorithms
+constexpr double COLOR_MATCH_THRESHOLD = 50.0;  // Color distance threshold for geometrize mode
+constexpr float BLOCK_SIZE_FACTOR = 30.0f;      // GD units per block
+constexpr int EDGE_INTENSITY_THRESHOLD = 100;   // Edge detection threshold
+
 /**
  * Represents a GameObject to be placed in the editor
  */
